@@ -1,0 +1,16 @@
+name: KindleEar Daily Push
+
+on:
+  schedule:
+    - cron: '10 12 * * *'   # 每天 UTC 12:10 = 北京时间 20:10
+  workflow_dispatch:         # 支持手动触发
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Call PythonAnywhere worker
+        run: |
+          curl --retry 3 --max-time 300 \
+            "https://${{ secrets.WORKER_NAME }}.pythonanywhere.com/worker?key=${{ secrets.SECRET }}&userName=${{ secrets.PA_USER }}&now=1"
